@@ -72,6 +72,8 @@ function App() {
   return (
     <ChakraProvider theme={theme}>
       <Helmet>
+        {/* Update timestamp to force a change */}
+        <meta name="timestamp" content={new Date().toISOString()} />
         {/* Primary Meta Tags */}
         <title>Nuucleum - AI-Powered Genomic Blockchain Platform</title>
         <meta name="title" content="Nuucleum - AI-Powered Genomic Blockchain Platform" />
