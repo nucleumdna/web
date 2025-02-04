@@ -29,18 +29,25 @@ jobs:
           cache: 'npm'
 
       - name: Install Dependencies
-        run: npm ci
+        run: |
+          npm install
+          npm ci
 
       - name: Build
-        run: npm run build
+        run: |
+          npm run build
+          echo "Build completed"
+          ls -la
         env:
           CI: false
           PUBLIC_URL: "https://nucleumdna.github.io/web"
 
-      # Add this step to check if build directory exists
-      - name: Check build directory
+      - name: Check build output
         run: |
-          ls -la build
+          if [ ! -d "build" ]; then
+            echo "Build directory not found!"
+            exit 1
+          fi
           echo "Build directory contents:"
           ls -la build/
 
@@ -50,11 +57,13 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'build'  # Changed from './build' to 'build'
-          name: github-pages # Add explicit name
+          path: build
+          name: github-pages
+          retention-days: 1
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v3
         with:
-          artifact_name: github-pages # Match the upload name
+          artifact_name: github-pages
+          token: ${{ secrets.GITHUB_TOKEN }}
